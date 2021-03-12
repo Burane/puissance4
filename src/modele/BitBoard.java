@@ -85,18 +85,18 @@ public class BitBoard implements Cloneable {
 		long move = 1L << (numberOfPieceInColumn[column]++ + ((column) * COLUMN));
 		bitBoards[getPlayerWhoMovesNext()] ^= move;
 		moves[whoIsPlaying++] = column;
-		System.out.println(this);
+//		System.out.println(this);
 	}
 
 	public void undo() {
 		int column = moves[--whoIsPlaying];
-		System.out.println("undo at " + column);
+//		System.out.println("undo at " + column);
 		moves[whoIsPlaying] = -1;
 		long move = 1L << (--numberOfPieceInColumn[column] + ((column) * COLUMN));
 		calculateHash(column);
 		scores[getPlayerWhoMovesNext()] -= evaluationTable[numberOfPieceInColumn[column]][column];
 		bitBoards[whoIsPlaying & 1] ^= move;
-		System.out.println(this);
+//		System.out.println(this);
 	}
 
 	public boolean isWin(long bitboard) {

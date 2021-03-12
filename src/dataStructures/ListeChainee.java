@@ -21,21 +21,22 @@ public class ListeChainee<T> implements Iterable<T> {
 		SimpleNode<T> node = new SimpleNode<>(data);
 		if (root == null) {
 			root = node;
-			last = node;
 		} else {
 			SimpleNode n = root;
 			while (n.getNext() != null) {
 				n = n.getNext();
 			}
 			n.setNext(node);
-			last = node;
 		}
+		last = node;
+		length++;
 	}
 
 	public void addRoot(T data) {
 		SimpleNode<T> node = new SimpleNode<>(data);
 		node.setNext(root);
 		root = node;
+		length++;
 	}
 
 	public void addAt(int index, T data) {
@@ -53,6 +54,7 @@ public class ListeChainee<T> implements Iterable<T> {
 			node.setNext(currentSimpleNode.getNext());
 			currentSimpleNode.setNext(node);
 		}
+		length++;
 	}
 
 	public void deleteLast() {
@@ -63,6 +65,7 @@ public class ListeChainee<T> implements Iterable<T> {
 			root = null;
 
 		last = newLast;
+		length--;
 	}
 
 	public void deleteAt(int index) {
@@ -77,6 +80,7 @@ public class ListeChainee<T> implements Iterable<T> {
 			}
 			currentSimpleNode.setNext(currentSimpleNode.getNext().getNext());
 		}
+		length--;
 	}
 
 	public T get(int index) {

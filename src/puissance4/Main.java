@@ -23,7 +23,7 @@ public class Main {
 		System.out.println("nb of 3 in a row : " + bb.checkNbOf3InARow(bb.getBoardOfPlayerNameWhoMovesNext()));
 		System.out.println("nb of 2 in a row : " + bb.checkNbOf2InARow(bb.getBoardOfPlayerNameWhoMovesNext()));
 		System.out.println("bb hash : " + bb.getHash());
-		AlphaBetaPlayer ai = new AlphaBetaPlayer(bb, Player.RED, 13);
+		AlphaBetaPlayer ai = new AlphaBetaPlayer(bb, Player.RED, 12);
 
 		bb.generateKeys();
 
@@ -31,7 +31,7 @@ public class Main {
 		do {
 //			System.out.println("\n =====================1======================== \n");
 			System.out.println("current player : " + bb.getPlayerNameWhoMovesNext());
-//			System.out.println(bb);
+			System.out.println(bb);
 			//			System.out.println("bb hash " + bb.getHash());
 			System.out.println("Quel colonne voulez vous jouer ? [0-6]");
 			int move = sc.nextInt();
