@@ -23,7 +23,7 @@ public class Main {
 		System.out.println("nb of 3 in a row : " + bb.checkNbOf3InARow(bb.getBoardOfPlayerNameWhoMovesNext()));
 		System.out.println("nb of 2 in a row : " + bb.checkNbOf2InARow(bb.getBoardOfPlayerNameWhoMovesNext()));
 		System.out.println("bb hash : " + bb.getHash());
-		AlphaBetaPlayer ai = new AlphaBetaPlayer(bb, Player.RED, 12);
+		AlphaBetaPlayer ai = new AlphaBetaPlayer(bb, Player.RED, 13);
 
 		bb.generateKeys();
 
@@ -41,16 +41,26 @@ public class Main {
 			else {
 				bb.move(move);
 			}
+			if(bb.isWin(bb.getBoardOfPlayerWhoHaveJustMove())){
+				System.out.println(bb.getPlayerNameWhoHaveJustMove() + " WIN");
+				return;
+			}
 //			System.out.println("\n ======================2======================= \n");
-//						System.out.println(bb);
-//						bb.evaluate();
-//						System.out.println("AI is playing");
-//						int aiMove = ai.getBestMove();
-//						System.out.println("aiMove = " + aiMove);
-//						bb.move(aiMove);
+			System.out.println(bb);
+			bb.evaluate();
+			System.out.println("AI is playing");
+			int aiMove = ai.getBestMove();
+			System.out.println("aiMove = " + aiMove);
+			bb.move(aiMove);
+			if(bb.isWin(bb.getBoardOfPlayerWhoHaveJustMove())){
+				System.out.println(bb.getPlayerNameWhoHaveJustMove() + " WIN");
+				return;
+			}
 
 		} while (!bb.isFull());
 
 	}
+
+
 
 }

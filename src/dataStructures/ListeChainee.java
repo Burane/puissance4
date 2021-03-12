@@ -128,13 +128,12 @@ public class ListeChainee<T> implements Iterable<T> {
 
 	private SimpleNode<T> sortedMerge(SimpleNode<T> a, SimpleNode<T> b, Comparator<? super T> c) {
 		SimpleNode<T> result;
-		/* Base cases */
 		if (a == null)
 			return b;
 		if (b == null)
 			return a;
 
-		if (c.compare(a.getData(), b.getData()) < 0) {
+		if (c.compare(a.getData(), b.getData()) <= 0) {
 			result = a;
 			result.setNext(sortedMerge(a.getNext(), b, c));
 		} else {
@@ -145,7 +144,7 @@ public class ListeChainee<T> implements Iterable<T> {
 	}
 
 	public void mergeSort(Comparator<? super T> c) {
-		mergeSort(root, c);
+		root = mergeSort(root, c);
 	}
 
 	private SimpleNode<T> mergeSort(SimpleNode<T> h, Comparator<? super T> c) {

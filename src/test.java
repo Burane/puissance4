@@ -8,17 +8,19 @@ public class test {
 		Pile<Integer> p = new Pile<>();
 
 		System.out.println(p);
-		p.add(1);
+		p.add(10);
+		p.add(10);
+		p.add(13);
+		p.add(13);
+		p.add(3);
+		p.add(0);
+		p.add(-5);
+		p.add(15);
+		p.add(16);
 		System.out.println(p);
-		System.out.println(p.get());
+		System.out.println("sorting");
+
+		p.mergeSort((Comparator<Integer>) (o1, o2) -> o1 - o2);
 		System.out.println(p);
-		////		new LinkedList().get();
-		//		p.mergeSort(new Comparator<Integer>() {
-		//			@Override
-		//			public int compare(Integer o1, Integer o2) {
-		//				return o1-o2;
-		//			}
-		//		});
-		//		System.out.println(p);
 	}
 }

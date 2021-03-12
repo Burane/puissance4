@@ -67,11 +67,13 @@ public class AlphaBetaPlayer {
 
 	public int getBestMove() {
 		ListeChainee<Integer> moves = game.listNextMoves();
-		orderMoves(moves);
+
 		System.out.println("moves = " + moves);
+		orderMoves(moves);
+		System.out.println("moves ordered = " + moves);
 		int bestMove = -1;
 		long bestScore = Integer.MIN_VALUE;
-
+		System.out.println("moves.getLength() == 0 "+(moves.getLength() == 0) +"   game.isFull() "+ (game.isFull()));
 		if (moves.getLength() == 0 || game.isFull()) {
 			System.out.println("DRAW");
 			return -1;

@@ -158,12 +158,15 @@ public class BitBoard implements Cloneable {
 		return bitBoards[getPlayerWhoMovesNext()];
 	}
 
-	public long getOpponentBoard() {
+	public long getBoardOfPlayerWhoHaveJustMove() {
 		return bitBoards[getPlayerWhoHaveJustMove()];
 	}
 
 	public Player getPlayerNameWhoMovesNext() {
 		return (getPlayerWhoMovesNext()) == 0 ? Player.YELLOW : Player.RED;
+	}
+	public Player getPlayerNameWhoHaveJustMove() {
+		return (getPlayerWhoMovesNext()) == 1 ? Player.YELLOW : Player.RED;
 	}
 
 	/*
@@ -171,7 +174,7 @@ public class BitBoard implements Cloneable {
 	 */
 	public long evaluate() {
 		long curentBoard = getBoardOfPlayerNameWhoMovesNext();
-		long opponentBoard = getOpponentBoard();
+		long opponentBoard = getBoardOfPlayerWhoHaveJustMove();
 
 		if (isWin(curentBoard))
 			return Integer.MAX_VALUE;
