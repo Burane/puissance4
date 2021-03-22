@@ -130,7 +130,6 @@ public class AlphaBetaPlayer {
 
 	class P4Entry {
 		long score;
-		int depth;
 		Flag flag;
 
 		public P4Entry(long score, Flag flag) {
