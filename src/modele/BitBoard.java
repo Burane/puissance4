@@ -1,29 +1,16 @@
 package modele;
 
 import dataStructures.ListeChainee;
-import dataStructures.Pile;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Random;
 
 public class BitBoard implements Cloneable {
 
-	private static final int ROW = 6;
-	private static final int COLUMN = 7;
-
-	private static final int[][] evaluationTable = { { 3, 4, 5, 7, 5, 4, 3 }, { 4, 6, 8, 10, 8, 6, 4 },
-			{ 5, 8, 11, 13, 11, 8, 5 }, { 5, 8, 11, 13, 11, 8, 5 }, { 4, 6, 8, 10, 8, 6, 4 }, { 3, 4, 5, 7, 5, 4, 3 } };
-
-	private final long[] scores = new long[2];
-
-	private long[][] hashTable = new long[2][ROW * COLUMN];
-
-	public long getHash() {
-		return hash;
-	}
-
-	private long hash = 0L;
+	public static final int ROW = 6;
+	public static final int COLUMN = 7;
+	private ZobristHashing zobristHashing;
+	private Heuristique heuristique;
 
 	/*
 	 * avoir une bitboard permet d'effectuer efficacement des actions sur le plateau
@@ -41,18 +28,18 @@ public class BitBoard implements Cloneable {
 	/*
 	 * les plateau du point de vue de chaque joueur
 	 */
-
 	private long[] bitBoards = new long[2];
+
 	/*
 	 * sert à savoir qui joue en fonction de si il est paire ou impaire
 	 */
-
 	private int whoIsPlaying = 0;
+
 	/*
 	 * on sauvegarde à chaque index combien de pion on a deja joué
 	 */
-
 	private final int[] numberOfPieceInColumn = { 0, 0, 0, 0, 0, 0, 0 };
+
 	/*
 	 * on sauvegarde la liste des coups pour pouvoir les annuler
 	 * ex: 3301 : on a joué sur la colonne 3 puis 3 puis 0 et enfin 1
@@ -64,7 +51,6 @@ public class BitBoard implements Cloneable {
 	 * |o|x| |o| | | |
 	 *
 	 */
-
 	private final int[] moves = new int[42];
 
 	public BitBoard() {
@@ -75,47 +61,33 @@ public class BitBoard implements Cloneable {
 		bitBoards = new long[2];
 		Arrays.fill(numberOfPieceInColumn, 0);
 		Arrays.fill(moves, -1);
-		Arrays.fill(scores, 0);
-		generateKeys();
+		heuristique = new Heuristique(this);
+		zobristHashing = new ZobristHashing(this);
 	}
 
 	public void move(int column) {
-		scores[getPlayerWhoMovesNext()] += evaluationTable[numberOfPieceInColumn[column]][column];
-		calculateHash(column);
+		heuristique.addScore(getPlayerWhoMovesNext(), column);
+		zobristHashing.calculateHash(column);
 		long move = 1L << (numberOfPieceInColumn[column]++ + ((column) * COLUMN));
 		bitBoards[getPlayerWhoMovesNext()] ^= move;
 		moves[whoIsPlaying++] = column;
-//		System.out.println(this);
 	}
 
 	public void undo() {
 		int column = moves[--whoIsPlaying];
-//		System.out.println("undo at " + column);
 		moves[whoIsPlaying] = -1;
 		long move = 1L << (--numberOfPieceInColumn[column] + ((column) * COLUMN));
-		calculateHash(column);
-		scores[getPlayerWhoMovesNext()] -= evaluationTable[numberOfPieceInColumn[column]][column];
+		zobristHashing.calculateHash(column);
+		heuristique.subScore(getPlayerWhoMovesNext(), column);
 		bitBoards[whoIsPlaying & 1] ^= move;
-//		System.out.println(this);
 	}
 
 	public boolean isWin(long bitboard) {
-		/*
-		 * ~whoIsPlaying & 1 car besoin de tester le dernier joueur qui vient de jouer
-		 */
 		int[] directions = { 1, 7, 6, 8 };
 		for (int direction : directions)
 			if ((bitboard & (bitboard >> direction) & (bitboard >> (2 * direction)) & (bitboard >> (3 * direction))) != 0)
 				return true;
 		return false;
-	}
-
-	public long getFullBoard() {
-		return bitBoards[0] | bitBoards[1];
-	}
-
-	public static String getBits(long l) {
-		return String.format("%032d", new BigInteger(Long.toBinaryString(l)));
 	}
 
 	public ListeChainee<Integer> listNextMoves() {
@@ -127,27 +99,18 @@ public class BitBoard implements Cloneable {
 		return moves;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		BitBoard other = (BitBoard) obj;
-		if (!Arrays.equals(bitBoards, other.bitBoards))
-			return false;
-		return Arrays.equals(moves, other.moves);
-	}
-
 	public boolean isFull() {
 		long topRowFullMask = 0b0100000_0100000_0100000_0100000_0100000_0100000_0100000L;
 		return ((getFullBoard() & topRowFullMask) == topRowFullMask);
 	}
 
+	public int[] getNumberOfPieceInColumn() {
+		return numberOfPieceInColumn;
+	}
+
 	public int getPlayerWhoMovesNext() {
 		return whoIsPlaying & 1;
+
 	}
 
 	public int getPlayerWhoHaveJustMove() {
@@ -165,59 +128,25 @@ public class BitBoard implements Cloneable {
 	public Player getPlayerNameWhoMovesNext() {
 		return (getPlayerWhoMovesNext()) == 0 ? Player.YELLOW : Player.RED;
 	}
+
 	public Player getPlayerNameWhoHaveJustMove() {
 		return (getPlayerWhoMovesNext()) == 1 ? Player.YELLOW : Player.RED;
 	}
 
-	/*
-		évalue le score d'une position
-	 */
-	public long evaluate() {
-		long curentBoard = getBoardOfPlayerNameWhoMovesNext();
-		long opponentBoard = getBoardOfPlayerWhoHaveJustMove();
-
-		if (isWin(curentBoard))
-			return Integer.MAX_VALUE;
-
-		if (isWin(opponentBoard))
-			return Integer.MIN_VALUE;
-
-		long currentScore = scores[getPlayerWhoMovesNext()];
-		long opponentScore = scores[getPlayerWhoHaveJustMove()];
-
-		//System.out.println("currentScore " + currentScore + " opponentScore " + opponentScore);
-		return currentScore - opponentScore;
+	public long getFullBoard() {
+		return bitBoards[0] | bitBoards[1];
 	}
 
-	/*
-		 Brian Kernighan’s Algorithm
-		 Complexity: O(log(n))
-		 Permet de savoir combien de bits sont à 1
-		 ex : 00000000000000000100000000000001 -> 2
-	 */
-	public static int countSetBits(long n) {
-		int count = 0;
-		while (n > 0) {
-			n &= (n - 1);
-			count++;
-		}
-		return count;
+	public static String getBits(long l) {
+		return String.format("%032d", new BigInteger(Long.toBinaryString(l)));
 	}
 
-	public int checkNbOf3InARow(long bitboard) {
-		int nb = 0;
-		int[] directions = { 1, 7, 6, 8 };
-		for (int direction : directions)
-			nb += countSetBits(bitboard & (bitboard >> direction) & (bitboard >> (2 * direction)));
-		return nb;
+	public ZobristHashing getZobristHashing() {
+		return zobristHashing;
 	}
 
-	public int checkNbOf2InARow(long bitboard) {
-		int nb = 0;
-		int[] directions = { 1, 7, 6, 8 };
-		for (int direction : directions)
-			nb += countSetBits(bitboard & (bitboard >> direction));
-		return nb;
+	public Heuristique getHeuristique() {
+		return heuristique;
 	}
 
 	@Override
@@ -238,21 +167,5 @@ public class BitBoard implements Cloneable {
 		}
 		return sb.toString();
 	}
-
-	public void generateKeys() {
-		Random rand = new Random();
-
-		for (int i = 0; i < hashTable.length; i++) {
-			for (int j = 0; j < hashTable[i].length; j++) {
-				hashTable[i][j] = rand.nextLong();
-			}
-		}
-	}
-
-	private void calculateHash(int column) {
-		long zobristHashing = hashTable[getPlayerWhoHaveJustMove()][COLUMN * numberOfPieceInColumn[column] + column];
-		hash ^= zobristHashing;
-	}
-
 
 }

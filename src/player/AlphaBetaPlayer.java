@@ -30,24 +30,24 @@ public class AlphaBetaPlayer {
 	public long alphaBetaSearch(long alpha, long beta, int depth, Player currentPlayer) {
 		nb++;
 
-		P4Entry entry = transpositionTable.get(game.getHash());
+		P4Entry entry = transpositionTable.get(game.getZobristHashing().getHash());
 		if (entry != null) {
 			if (entry.flag == Flag.EXACT)
 				return entry.score;
 			if (entry.flag == Flag.LOWERBOUND && entry.score > alpha)
 				alpha = entry.score;
-			if(entry.flag == Flag.UPPERBOUND && entry.score < beta)
+			if (entry.flag == Flag.UPPERBOUND && entry.score < beta)
 				beta = entry.score;
 		}
 
-		if (depth == 0 || game.isFull()){
-			long score = game.evaluate();
-			if(score <= alpha)
-				transpositionTable.put(game.getHash(),new P4Entry(score,depth,Flag.LOWERBOUND));
-			else if(score >= beta)
-				transpositionTable.put(game.getHash(),new P4Entry(score,depth,Flag.UPPERBOUND));
+		if (depth == 0 || game.isFull()) {
+			long score = game.getHeuristique().evaluate();
+			if (score <= alpha)
+				transpositionTable.put(game.getZobristHashing().getHash(), new P4Entry(score, Flag.LOWERBOUND));
+			else if (score >= beta)
+				transpositionTable.put(game.getZobristHashing().getHash(), new P4Entry(score, Flag.UPPERBOUND));
 			else
-				transpositionTable.put(game.getHash(),new P4Entry(score,depth,Flag.EXACT));
+				transpositionTable.put(game.getZobristHashing().getHash(), new P4Entry(score, Flag.EXACT));
 			return score;
 		}
 
@@ -59,6 +59,7 @@ public class AlphaBetaPlayer {
 			for (int move : moves) {
 				game.move(move);
 				long score = alphaBetaSearch(alpha, beta, depth - 1, Player.getOpponnent(currentPlayer));
+
 				game.undo();
 				alpha = Math.max(alpha, score);
 				if (alpha >= beta) {
@@ -94,7 +95,6 @@ public class AlphaBetaPlayer {
 			System.out.println("DRAW");
 			return -1;
 		}
-		// all move have 0 score TODO
 		long startTime = System.nanoTime();
 		for (int move : moves) {
 			game.move(move);
@@ -133,9 +133,8 @@ public class AlphaBetaPlayer {
 		int depth;
 		Flag flag;
 
-		public P4Entry(long score, int depth, Flag flag) {
+		public P4Entry(long score, Flag flag) {
 			this.score = score;
-			this.depth = depth;
 			this.flag = flag;
 		}
 	}
@@ -143,7 +142,5 @@ public class AlphaBetaPlayer {
 	enum Flag {
 		LOWERBOUND, UPPERBOUND, EXACT
 	}
-
-	;
 
 }
