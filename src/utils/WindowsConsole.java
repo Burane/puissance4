@@ -7,8 +7,7 @@ import com.sun.jna.platform.win32.WinNT.HANDLE;
 
 public abstract class WindowsConsole {
 
-	// j'ai essayé de changer le terminal en mode utf-8 mais ca fonctionne pas toujours je ne sais pas pourquoi donc j'ai abandonné l'idée d'utiliser des chars utf-8
-	// mais je laisse cette fonction car j'y ai passer pas mal de temps
+	// changer le terminal en mode utf-8
 	public static void changeCMDcodepage() {
 		if (System.getProperty("os.name").startsWith("Windows")) {
 			Function SetConsoleCP = Function.getFunction("kernel32", "SetConsoleCP");
@@ -25,10 +24,9 @@ public abstract class WindowsConsole {
 		}
 	}
 
-	// enable ANSI escape char for using color
+	// enable ANSI escape char for coloration
 	public static void enableAnsiEscapeCMD() {
 		if (System.getProperty("os.name").startsWith("Windows")) {
-			// Set output mode to handle virtual terminal sequences
 			Function GetStdHandleFunc = Function.getFunction("kernel32", "GetStdHandle");
 			DWORD STD_OUTPUT_HANDLE = new DWORD(-11);
 			HANDLE hOut = (HANDLE) GetStdHandleFunc.invoke(HANDLE.class, new Object[] { STD_OUTPUT_HANDLE });

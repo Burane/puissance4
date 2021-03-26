@@ -2,7 +2,12 @@
   <artifact type="jar" name="puissance4:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/puissance4_jar</output-path>
     <root id="archive" name="puissance4.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/ressources/META-INF/MANIFEST.MF" />
+      </element>
       <element id="module-output" name="puissance4" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jna-platform-5.8.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jna-5.8.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

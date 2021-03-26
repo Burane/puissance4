@@ -6,6 +6,9 @@ import modele.Score;
 import player.AlphaBetaPlayer;
 import utils.WindowsConsole;
 
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class Main {
@@ -13,6 +16,8 @@ public class Main {
 	public static void main(String[] args) {
 		WindowsConsole.changeCMDcodepage();
 		WindowsConsole.enableAnsiEscapeCMD();
+
+		System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
 
 		do {
 			menu();
