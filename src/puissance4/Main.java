@@ -2,6 +2,7 @@ package puissance4;
 
 import modele.BitBoard;
 import modele.Player;
+import modele.Score;
 import player.AlphaBetaPlayer;
 import utils.WindowsConsole;
 
@@ -32,6 +33,8 @@ public class Main {
 	}
 
 	private static void showScore() {
+		Score score = Score.getInstance();
+		System.out.println(score);
 	}
 
 }

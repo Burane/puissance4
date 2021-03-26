@@ -3,16 +3,18 @@ package puissance4;
 import dataStructures.Pile.Pile;
 import modele.BitBoard;
 import modele.Player;
+import modele.Score;
 import player.AlphaBetaPlayer;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Game {
-	Pile<String> review = new Pile<>();
-	BitBoard bb = new BitBoard();
-	AlphaBetaPlayer ai = new AlphaBetaPlayer(bb, Player.YELLOW, 10);
-	String name = "";
+	private Pile<String> review = new Pile<>();
+	private BitBoard bb = new BitBoard();
+	private AlphaBetaPlayer ai = new AlphaBetaPlayer(bb, Player.YELLOW, 10);
+	private String name = "";
+	private int nbCoups = 0;
 
 	public Game() {
 
@@ -44,12 +46,15 @@ public class Game {
 	}
 
 	public boolean move(int column) {
+		nbCoups++;
 		bb.move(column);
 		review.add(bb.toString());
 		System.out.println(bb);
-
 		if (bb.isWin(bb.getBoardOfPlayerWhoHaveJustMove())) {
-			System.out.println(bb.getPlayerNameWhoHaveJustMove() + " WIN");
+			Player player = bb.getPlayerNameWhoHaveJustMove();
+			System.out.println(player + " WIN");
+			Score score = Score.getInstance();
+			score.add(player == Player.YELLOW ? name : "AI", nbCoups);
 			return true;
 		}
 		return false;

@@ -136,9 +136,9 @@ public class ArbreBinaire<T extends Comparable<T>> {
 	private void AfficherNoeud(Noeud n, int prof, StringBuffer sb) {
 		sb.append("   ".repeat(prof));
 		if (n == null) {
-			sb.append("|->null \n");
+			sb.append("|->  \n");
 		} else {
-			sb.append("|->").append(n).append("\n");
+			sb.append("|-> ").append(n).append("\n");
 			AfficherNoeud(n.getLeftChild(), prof + 1, sb);
 			AfficherNoeud(n.getRightChild(), prof + 1, sb);
 		}
