@@ -1,4 +1,4 @@
-package dataStructures;
+package dataStructures.listeChainee;
 
 public class SimpleNode<T> {
 	private T data;

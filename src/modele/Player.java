@@ -1,8 +1,16 @@
 package modele;
 
-public enum Player {
+import utils.ConsoleColors;
 
-	RED("R"), YELLOW("Y"), EMPTY(" ");
+public enum Player {
+// utf-8 chars
+//	RED(ConsoleColors.RED+" ■ "+ConsoleColors.RESET),
+//	YELLOW(ConsoleColors.YELLOW+" ■ "+ConsoleColors.RESET),
+//	EMPTY(ConsoleColors.WHITE+" ■ "+ConsoleColors.RESET);
+
+	RED(ConsoleColors.RED+" ■"+ConsoleColors.RESET),
+	YELLOW(ConsoleColors.YELLOW+" ■"+ConsoleColors.RESET),
+	EMPTY(ConsoleColors.WHITE+" ■"+ConsoleColors.RESET);
 
 	private final String letter;
 

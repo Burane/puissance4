@@ -1,6 +1,6 @@
 package modele;
 
-import dataStructures.ListeChainee;
+import dataStructures.listeChainee.ListeChainee;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -161,7 +161,7 @@ public class BitBoard implements Cloneable {
 				if (((bitBoards[1] >> j) & 1) == 1)
 					curr = Player.RED;
 
-				sb.append("[").append(curr.getLetter()).append("]");
+				sb.append(curr.getLetter());
 			}
 			sb.append('\n');
 		}

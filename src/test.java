@@ -1,26 +1,30 @@
-import dataStructures.Pile;
-
-import java.util.Comparator;
+import java.io.IOException;
 
 @SuppressWarnings("unchecked")
 public class test {
-	public static void main(String[] args) {
-		Pile<Integer> p = new Pile<>();
+	public static void main(String[] args) throws InterruptedException {
 
-		System.out.println(p);
-		p.add(10);
-		p.add(10);
-		p.add(13);
-		p.add(13);
-		p.add(3);
-		p.add(0);
-		p.add(-5);
-		p.add(15);
-		p.add(16);
-		System.out.println(p);
-		System.out.println("sorting");
 
-		p.mergeSort((Comparator<Integer>) (o1, o2) -> o1 - o2);
-		System.out.println(p);
+		String bb1 = "hello world";
+		String bb2 = "HELLO WORLD";
+
+		System.out.println(bb1);
+		Thread.sleep(250);
+		cls();
+		System.out.println(bb2);
+		System.out.println("------------------");
+
+
 	}
+
+	public static void cls() {
+		try {
+			if (System.getProperty("os.name").contains("Windows"))
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			else
+				Runtime.getRuntime().exec("clear");
+		} catch (InterruptedException | IOException ex) {
+		}
+	}
+
 }

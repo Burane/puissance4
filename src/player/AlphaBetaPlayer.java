@@ -1,10 +1,9 @@
 package player;
 
-import dataStructures.ListeChainee;
+import dataStructures.listeChainee.ListeChainee;
 import modele.BitBoard;
 import modele.Player;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;
@@ -85,9 +84,9 @@ public class AlphaBetaPlayer {
 	public int getBestMove() {
 		ListeChainee<Integer> moves = game.listNextMoves();
 
-		System.out.println("moves = " + moves);
+//		System.out.println("moves = " + moves);
 		orderMoves(moves);
-		System.out.println("moves ordered = " + moves);
+//		System.out.println("moves ordered = " + moves);
 		int bestMove = -1;
 		long bestScore = Integer.MIN_VALUE;
 		//		System.out.println("moves.getLength() == 0 "+(moves.getLength() == 0) +"   game.isFull() "+ (game.isFull()));
@@ -101,7 +100,7 @@ public class AlphaBetaPlayer {
 			long currentScore = alphaBetaSearch(Integer.MIN_VALUE, Integer.MAX_VALUE, this.depth, (this.AIPlayer));
 			if (this.depth % 2 == 0)
 				currentScore *= -1;
-			System.out.println("processing move : " + move + " score : " + currentScore);
+//			System.out.println("processing move : " + move + " score : " + currentScore);
 			game.undo();
 			if (currentScore > bestScore) {
 				bestMove = move;
@@ -110,12 +109,10 @@ public class AlphaBetaPlayer {
 		}
 		long stopTime = System.nanoTime();
 		NumberFormat df = NumberFormat.getNumberInstance(Locale.getDefault());
-		System.out.println("nombre de situations évaluées : " + df
-				.format(nb) + " en " + (stopTime - startTime) / 1000000000.0 + " s");
+//		System.out.println("nombre de situations évaluées : " + df
+//				.format(nb) + " en " + (stopTime - startTime) / 1000000000.0 + " s");
 		nb = 0;
 
-		if (bestMove == -1)
-			System.out.println("WARING BESTMOVE = -1");
 
 		return bestMove;
 	}

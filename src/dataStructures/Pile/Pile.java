@@ -1,4 +1,7 @@
-package dataStructures;
+package dataStructures.Pile;
+
+import dataStructures.listeChainee.ListeChainee;
+import dataStructures.listeChainee.SimpleNode;
 
 @SuppressWarnings("unchecked")
 public class Pile<T> extends ListeChainee {

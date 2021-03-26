@@ -1,4 +1,4 @@
-package dataStructures;
+package dataStructures.listeChainee;
 
 import java.util.Iterator;
 

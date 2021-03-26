@@ -3,63 +3,35 @@ package puissance4;
 import modele.BitBoard;
 import modele.Player;
 import player.AlphaBetaPlayer;
+import utils.WindowsConsole;
 
 import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) {
+		WindowsConsole.changeCMDcodepage();
+		WindowsConsole.enableAnsiEscapeCMD();
 
-		BitBoard bb = new BitBoard();
-
-		System.out.println(bb);
-//		long curentBoard = bb.getBoardOfPlayerNameWhoMovesNext();
-//
-//		System.out.println("current player : " + bb.getPlayerNameWhoMovesNext());
-//		System.out.println("Is current player win : " + bb.isWin(bb.getBoardOfPlayerNameWhoMovesNext()));
-//		System.out.println("bitboard bits representation : " + BitBoard.getBits(bb.getBoardOfPlayerNameWhoMovesNext()));
-//		System.out.println("bitboard bits shifting representation : " + BitBoard
-//				.getBits(curentBoard & (curentBoard >> 1) & (curentBoard >> 2)));
-//		System.out.println("nb of 3 in a row : " + bb.checkNbOf3InARow(bb.getBoardOfPlayerNameWhoMovesNext()));
-//		System.out.println("nb of 2 in a row : " + bb.checkNbOf2InARow(bb.getBoardOfPlayerNameWhoMovesNext()));
-//		System.out.println("bb hash : " + bb.getZobristHashing().getHash());
-		AlphaBetaPlayer ai = new AlphaBetaPlayer(bb, Player.YELLOW, 10);
-
-
-		Scanner sc = new Scanner(System.in);
 		do {
-//			System.out.println("\n =====================1======================== \n");
-			System.out.println("current player : " + bb.getPlayerNameWhoMovesNext());
-			//			System.out.println("bb hash " + bb.getHash());
-			System.out.println("Quel colonne voulez vous jouer ? [0-6]");
-			int move = sc.nextInt();
-			if (move == -1) {
-				bb.undo();
-			}
-			else {
-				bb.move(move);
-			}
-			System.out.println(bb);
-			if(bb.isWin(bb.getBoardOfPlayerWhoHaveJustMove())){
-				System.out.println(bb.getPlayerNameWhoHaveJustMove() + " WIN");
-				return;
-			}
-//			System.out.println("\n ======================2======================= \n");
-			bb.getHeuristique().evaluate();
-			System.out.println("AI is playing");
-			int aiMove = ai.getBestMove();
-			System.out.println("aiMove = " + aiMove);
-			bb.move(aiMove);
-			System.out.println(bb);
-			if(bb.isWin(bb.getBoardOfPlayerWhoHaveJustMove())){
-				System.out.println(bb.getPlayerNameWhoHaveJustMove() + " WIN");
-				return;
-			}
-
-		} while (!bb.isFull());
+			menu();
+		} while (true);
 
 	}
 
 
+	public static void menu() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Voulez vous jouer[1] / consulter les scores[2] / quitter[3]");
+		int choice = sc.nextInt();
+		switch (choice){
+			case 1 -> new Game();
+			case 2 -> showScore();
+			case 3 -> System.exit(0);
+		}
+	}
+
+	private static void showScore() {
+	}
 
 }
